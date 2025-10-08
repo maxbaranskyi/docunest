@@ -41,7 +41,9 @@ services:
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
         volumes:
-            - db-data:/var/lib/mysql
+            - db-data:/var/lib/mysql:z
+        networks:
+            - docunest_network
     redis:
         image: redis:alpine
         command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
