@@ -41,7 +41,9 @@ services:
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
         volumes:
-            - db-data:/var/lib/mysql
+            - db-data:/var/lib/mysql:z
+        networks:
+            - docunest_network
     redis:
         image: redis:alpine
         command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
@@ -50,12 +52,13 @@ services:
         networks:
             - docunest_network
     nodejs:
-        image: node:14.15.5-alpine3.12
+        image: node:trixie-slim
+        user: "node"
+        working_dir: /usr/src/app
         volumes:
-            - .:/usr/src
-            - ./node_modules/:/usr/src/node_modules:Z
-        networks:
-            - docunest_network
+            - .:/usr/src/app:z
+        environment:
+            - NODE_ENV=dev
 
 volumes:
     db-data: ~
